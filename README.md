@@ -12,8 +12,6 @@ cp .env.example .env
 uv run slm-wiki serve                  # opens http://127.0.0.1:8765
 ```
 
-**MGA instead of the local model:** set `SLM_WIKI_LLM_PROVIDER=mga` and `SLM_WIKI_MGA_API_KEY` in `.env` (model and base URL default to `claude-sonnet-4.6` on `chat.int.bayer.com/api/v2`). Then no llama-server is needed. The corporate TLS proxy is trusted via the macOS Keychain (`truststore`). The header menu lists the local model by name and the latest available MGA chat model in each family (deprecated models, aliases, and duplicate Azure/Bedrock copies stay hidden). Switch back with `SLM_WIKI_LLM_PROVIDER=local`. To turn MGA off completely (no model fetches, nothing in the menu, `/api/provider` refuses it), set `SLM_WIKI_MGA_ENABLED=false`. It is enabled by default. The engine and prompts stay the same, but source text goes to MGA.
-
 ## The UI
 
 | Area | What it does |
