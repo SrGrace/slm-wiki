@@ -23,7 +23,7 @@ _llama_starting = threading.Lock()
 _mga_cache: tuple[float, list] = (0.0, [])  # ponytail: 10 min; the menu doesn't need a live catalog
 
 
-def start_llama(settings: Settings) -> None:
+def _start_llama(settings: Settings) -> None:
     """Fire-and-forget: the script no-ops if already serving, so this is safe to call repeatedly."""
     if not _llama_starting.acquire(blocking=False):
         return
@@ -162,8 +162,6 @@ class Handler(BaseHTTPRequestHandler):
             info = llm.health()
         if info.get("mga_models") is not None:
             _mga_cache = (time.time(), info["mga_models"])
-        elif not self.s.mga_enabled:
-            _mga_cache = (0.0, [])
         elif not _mga_cache[1] or time.time() - _mga_cache[0] > 600:
             try:
                 choices = fetch_mga_models(self.s)
@@ -177,8 +175,7 @@ class Handler(BaseHTTPRequestHandler):
             "mga_models": _mga_cache[1],
             "ingesting": _ingesting.locked(),
             "provider": self.s.llm_provider,
-            "mga_enabled": self.s.mga_enabled,
-            "mga_configured": self.s.mga_enabled and bool(self.s.mga_api_key),
+            "mga_configured": bool(self.s.mga_api_key),
         })
 
     def provider(self, b: dict) -> None:
@@ -186,15 +183,12 @@ class Handler(BaseHTTPRequestHandler):
         if p not in ("local", "mga"):
             self._json({"error": "provider must be 'local' or 'mga'"}, 400)
             return
-        if p == "mga" and not self.s.mga_enabled:
-            self._json({"error": "MGA is disabled (SLM_WIKI_MGA_ENABLED=false in .env)"}, 403)
-            return
         if p == "mga" and not self.s.mga_api_key:
             self._json({"error": "SLM_WIKI_MGA_API_KEY is not set in .env"}, 400)
             return
         self.s.llm_provider = p
         if p == "local":
-            start_llama(self.s)
+            _start_llama(self.s)
         elif model := str(b.get("model") or ""):
             self.s.mga_model = model
         self.health({})
