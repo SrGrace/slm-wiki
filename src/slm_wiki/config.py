@@ -21,7 +21,6 @@ class Settings(BaseSettings):
     llm_base_url: str = "http://127.0.0.1:18434/v1"
     llm_model: str = "Qwen_Qwen3-8B-Q4_K_M"
     llm_api_key: str = "no-key"
-    mga_enabled: bool = True
     mga_base_url: str = "https://chat.int.bayer.com/api/v2"
     mga_model: str = "claude-sonnet-4.6"
     mga_api_key: str = ""
@@ -45,8 +44,6 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _provider(self) -> Settings:
-        if self.llm_provider == "mga" and not self.mga_enabled:
-            raise ValueError("SLM_WIKI_LLM_PROVIDER=mga but SLM_WIKI_MGA_ENABLED=false")
         if self.llm_provider == "mga" and not self.mga_api_key:
             raise ValueError("SLM_WIKI_LLM_PROVIDER=mga needs SLM_WIKI_MGA_API_KEY")
         return self
