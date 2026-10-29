@@ -88,7 +88,7 @@ def latest_chat_models(rows: list[dict]) -> list[dict[str, str]]:
 
 
 def fetch_mga_models(settings: Settings) -> list[dict[str, str]]:
-    if not settings.mga_enabled or not settings.mga_api_key:
+    if not settings.mga_api_key:
         return []
     with httpx.Client(
         base_url=settings.mga_base_url.rstrip("/"),
