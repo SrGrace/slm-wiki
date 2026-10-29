@@ -12,7 +12,6 @@ from slm_wiki.ingest import ingest_path, ingest_pending
 from slm_wiki.lint import lint as run_lint
 from slm_wiki.llm import LLMClient
 from slm_wiki.query import query as run_query
-from slm_wiki.server import start_llama
 from slm_wiki.server import serve as make_server
 from slm_wiki.vault import Vault
 
@@ -25,10 +24,7 @@ def serve(
     no_browser: bool = typer.Option(False, "--no-browser", help="Don't open a browser tab."),
 ) -> None:
     """Web UI: browse, ask, ingest, lint, live activity."""
-    settings = get_settings()
-    httpd = make_server(settings, port=port)
-    if settings.llm_provider == "local":
-        start_llama(settings)
+    httpd = make_server(get_settings(), port=port)
     url = f"http://127.0.0.1:{port}"
     typer.echo(f"SLM Wiki on {url}  (Ctrl+C to stop)", err=True)
     if not no_browser:
