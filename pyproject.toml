@@ -4,7 +4,7 @@ version = "0.3.0"
 description = "Karpathy-style LLM wiki maintained by local SLMs via llama.cpp, with a local web UI"
 readme = "README.md"
 authors = [
-    { name = "Sourav Verma", email = "sourav.verma@bayer.com" }
+    { name = "Sourav Verma", email = "" }
 ]
 requires-python = ">=3.12"
 dependencies = [
