@@ -1,6 +1,6 @@
 # SLM Wiki
 
-[Karpathy's LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) on a local 8B model. llama.cpp is the model, a small Python engine is the disciplined maintainer, and a local web UI (inspired by [MindBase](https://github.com/frankchu91/mindbase-llm-wiki)) is where you browse, ask, and add sources. Everything is plain markdown on disk.
+[Karpathy's LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) on a local small language model. llama.cpp is the model server, a small Python engine is the disciplined maintainer, and a local web UI (inspired by [MindBase](https://github.com/frankchu91/mindbase-llm-wiki)) is where you browse, ask, and add sources. Everything is plain markdown on disk.
 
 ## Setup
 
