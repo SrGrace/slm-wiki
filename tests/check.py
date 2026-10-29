@@ -11,7 +11,7 @@ from slm_wiki import ingest as ingest_mod
 from slm_wiki.config import Settings
 from slm_wiki.ingest import chunk_markdown, pending_raw, raw_sha
 from slm_wiki.lint import lint
-from slm_wiki.llm import LLMClient, fetch_mga_models, latest_chat_models
+from slm_wiki.llm import LLMClient, latest_chat_models
 from slm_wiki.query import answer_sections, check_citations, search
 from slm_wiki.server import serve
 from slm_wiki.vault import Vault, parse_frontmatter, render_page, safe_title
@@ -106,13 +106,6 @@ assert ids == ["claude-opus-5.5"], ids
 m = Settings(_env_file=None, llm_provider="mga", mga_api_key="k", mga_model="m")
 assert (m.effective_model, m.effective_api_key, m.effective_base_url) == ("m", "k", m.mga_base_url), m
 assert m.llm_model != "m", "switching provider must not mutate the local triple"
-assert Settings(_env_file=None).mga_enabled, "MGA must default to enabled"
-assert fetch_mga_models(Settings(_env_file=None, mga_enabled=False, mga_api_key="k")) == []
-try:
-    Settings(_env_file=None, llm_provider="mga", mga_api_key="k", mga_enabled=False)
-    raise AssertionError("provider=mga with MGA disabled must fail")
-except ValueError:
-    pass
 
 replies, budgets = iter(['{"a": "bad "quote"}', '{"a": 1}']), []
 fake = type("Fake", (LLMClient,), {"chat": lambda self, s, u, **kw: budgets.append(kw["max_tokens"]) or next(replies)})
